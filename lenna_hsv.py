@@ -1,4 +1,8 @@
-"""OpenCV로 Lenna.png를 읽어 HSV로 변환하고 H·S·V 성분을 출력·표시합니다."""
+"""
+OpenCV로 Lenna.png를 읽어 HSV로 변환하고 H·S·V 성분을 출력·표시합니다.
+
+HSV: 색상(Hue), 채도(Saturation), 명도(Value) — 색 범위를 잡을 때 자주 사용합니다.
+"""
 
 import os
 
@@ -18,6 +22,7 @@ def main() -> None:
         print("BGR 3채널 컬러 이미지가 아닙니다.")
         return
 
+    # BGR → HSV (inRange 등으로 특정 색만 뽑을 때 전 단계로 많이 씀)
     hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
     h, s, v = cv2.split(hsv)
 

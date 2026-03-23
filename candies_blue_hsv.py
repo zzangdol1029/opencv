@@ -1,4 +1,8 @@
-"""candies.png에서 HSV로 파란색 캔디만 추출합니다. (힌트: H 100~140)"""
+"""
+candies.png에서 HSV로 파란색 캔디만 추출합니다.
+
+실습 힌트: 파란색 H 구간은 대략 100~140 (OpenCV 8비트 H는 0~179).
+"""
 
 import os
 
@@ -22,6 +26,7 @@ def main() -> None:
 
     hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
 
+    # (H, S, V) 각각 하한·상한을 동시에 만족하는 픽셀만 255
     lower = np.array([BLUE_H_MIN, S_MIN, V_MIN], dtype=np.uint8)
     upper = np.array([BLUE_H_MAX, 255, 255], dtype=np.uint8)
     mask = cv2.inRange(hsv, lower, upper)

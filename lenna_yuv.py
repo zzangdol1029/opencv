@@ -1,4 +1,8 @@
-"""OpenCV로 Lenna.png를 읽어 YUV로 변환하고 Y·U·V 성분을 출력·표시합니다."""
+"""
+OpenCV로 Lenna.png를 읽어 YUV로 변환하고 Y·U·V 성분을 출력·표시합니다.
+
+Y: 휘도(밝기), U/V: 색차(크로마). 영상 압축·전송에서 흔히 쓰는 표현입니다.
+"""
 
 import os
 
@@ -18,6 +22,7 @@ def main() -> None:
         print("BGR 3채널 컬러 이미지가 아닙니다.")
         return
 
+    # BT.601 등에 맞는 8비트 YUV 변환 (OpenCV 기본 구현)
     yuv = cv2.cvtColor(bgr, cv2.COLOR_BGR2YUV)
     y, u, v = cv2.split(yuv)
 

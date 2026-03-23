@@ -1,4 +1,8 @@
-"""Lenna.png를 BGR로 읽고 B·G·R 채널 히스토그램을 계산해 출력·표시합니다."""
+"""
+Lenna.png를 BGR로 읽고 B·G·R 채널 히스토그램을 계산해 출력·표시합니다.
+
+채널마다 밝기 분포가 다르므로 색 특성을 비교할 때 유용합니다.
+"""
 
 import os
 
@@ -13,7 +17,12 @@ HIST_H = 400
 
 
 def hist_to_polyline(hist: np.ndarray) -> np.ndarray:
-    """히스토그램을 높이 HIST_H에 맞게 정규화한 뒤 polylines용 점 배열로 만듭니다."""
+    """
+    히스토그램을 높이 HIST_H에 맞게 정규화한 뒤 polylines용 (x,y) 점 256개를 만듭니다.
+
+    x: 밝기 0~255를 가로 폭에 선형 매핑
+    y: 아래가 밝기 0에 가깝도록 캔버스 좌표로 뒤집음
+    """
     hn = hist.copy()
     cv2.normalize(hn, hn, alpha=0, beta=HIST_H - 1, norm_type=cv2.NORM_MINMAX)
     pts = np.empty((256, 2), dtype=np.int32)
@@ -33,6 +42,7 @@ def main() -> None:
         print("BGR 3채널 이미지가 아닙니다.")
         return
 
+    # 채널 0=B, 1=G, 2=R
     hist_b = cv2.calcHist([bgr], [0], None, [256], [0, 256])
     hist_g = cv2.calcHist([bgr], [1], None, [256], [0, 256])
     hist_r = cv2.calcHist([bgr], [2], None, [256], [0, 256])
@@ -43,6 +53,7 @@ def main() -> None:
         peak = int(np.argmax(flat))
         print(f"  {name}: 밝기 {peak}에서 {int(flat[peak])} 픽셀 (최빈값)")
 
+    # 흰 배경에 BGR 순서로 선 색 지정 (OpenCV 색상 튜플은 B,G,R)
     hist_img = np.full((HIST_H, HIST_W, 3), 255, dtype=np.uint8)
     cv2.polylines(hist_img, [hist_to_polyline(hist_b)], False, (255, 0, 0), 2)
     cv2.polylines(hist_img, [hist_to_polyline(hist_g)], False, (0, 255, 0), 2)

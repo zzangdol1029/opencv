@@ -1,4 +1,8 @@
-"""OpenCV로 기본 카메라 영상을 읽어 창에 표시합니다."""
+"""
+OpenCV로 기본 카메라 영상을 읽어 창에 표시합니다.
+
+VideoCapture(인덱스): 0은 보통 내장 카메라, USB 웹캠은 1 이상일 수 있습니다.
+"""
 
 import cv2
 
@@ -19,6 +23,7 @@ def main() -> None:
             print("프레임을 읽지 못했습니다.")
             break
         cv2.imshow("Camera", frame)
+        # 실시간이므로 짧게 대기(1ms); 키 입력만 처리해도 충분한 경우가 많음
         if cv2.waitKey(1) & 0xFF == ord("q"):
             break
 

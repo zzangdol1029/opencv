@@ -1,4 +1,9 @@
-"""candies.png에서 HSV 색 공간으로 붉은색 캔디만 추출합니다."""
+"""
+candies.png에서 HSV 색 공간으로 붉은색 캔디만 추출합니다.
+
+빨강은 색상각 H가 0° 근처와 180° 근처(원형 색환) 두 구간에 걸쳐 있어
+마스크를 두 번 만든 뒤 bitwise_or로 합칩니다.
+"""
 
 import os
 
@@ -8,11 +13,11 @@ import numpy as np
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 IMAGE_PATH = os.path.join(BASE_DIR, "candies.png")
 
-# OpenCV HSV: H 0~179, S·V 0~255. 빨강은 H가 0 근처와 179 근처 두 덩어리로 나뉩니다.
-LOW_RED_H_MAX = 15
-HIGH_RED_H_MIN = 155
-S_MIN = 90
-V_MIN = 60
+# OpenCV HSV: H 0~179, S·V 0~255
+LOW_RED_H_MAX = 15  # 낮은 쪽 빨강·주황 경계 (넓히면 주황까지 잡힘)
+HIGH_RED_H_MIN = 155  # 높은 쪽 빨강·자주 시작 (낮추면 자주 쪽 포함)
+S_MIN = 90  # 채도 하한: 회색·흰색 제거
+V_MIN = 60  # 명도 하한: 너무 어두운 영역 제거
 
 
 def main() -> None:
@@ -23,6 +28,7 @@ def main() -> None:
 
     hsv = cv2.cvtColor(bgr, cv2.COLOR_BGR2HSV)
 
+    # inRange는 채널마다 [하한, 상한]을 동시에 만족하는 픽셀만 255
     lower1 = np.array([0, S_MIN, V_MIN], dtype=np.uint8)
     upper1 = np.array([LOW_RED_H_MAX, 255, 255], dtype=np.uint8)
     lower2 = np.array([HIGH_RED_H_MIN, S_MIN, V_MIN], dtype=np.uint8)
